@@ -5,12 +5,14 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.text.InputType;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -32,6 +34,8 @@ public class Diferido_consultar extends AppCompatActivity {
     static final int DATE_ID = 0, HOUR_ID=1;
     Calendar c = Calendar.getInstance();
     String[] tipos ={"Seleccione el tipo de evaluacion","EP","ED","EL"};
+    FrameLayout listDetail;
+    private final String urlLocal = "http://192.168.1.8/ws_solicitud_diferido_query.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,63 +55,13 @@ public class Diferido_consultar extends AppCompatActivity {
         tipoEval=(Spinner) findViewById(R.id.spinTipoEval);
         motivos = (Spinner) findViewById(R.id.spinMotivos);
         ciclo = findViewById(R.id.editCodciclo);
-
-
-        lblMateria = (TextView) findViewById(R.id.lblCodMat);
-        lblTipoEva = (TextView) findViewById(R.id.lblTipoEval);
-        lblGT = (TextView) findViewById(R.id.lblGT);
-        lblGD = (TextView) findViewById(R.id.lblGD);
-        lblGL =(TextView) findViewById(R.id.lblGL);
-        lblFecha = (TextView) findViewById(R.id.lblFecha);
-        lblHora = (TextView) findViewById(R.id.lblHora);
-        lblMotivo = (TextView) findViewById(R.id.lblMotivo);
-        lblOtro = (TextView) findViewById(R.id.lblOtro);
-        lblEstado = findViewById(R.id.lblEstadoSoli);
-        eliminarBtn = (Button) findViewById(R.id.EliminarBtn);
-        modificarBtn = (Button) findViewById(R.id.ModificarBtn);
-
-        eliminarBtn.setVisibility(View.GONE);
-        modificarBtn.setVisibility(View.GONE);
-
-        lblMateria.setVisibility(View.VISIBLE);
-        lblTipoEva.setVisibility(View.VISIBLE);
-        lblGT.setVisibility(View.GONE);
-        lblGD.setVisibility(View.GONE);
-        lblGL.setVisibility(View.GONE);
-        lblFecha.setVisibility(View.GONE);
-        lblHora.setVisibility(View.GONE);
-        lblMotivo.setVisibility(View.GONE);
-        lblOtro.setVisibility(View.GONE);
-        lblEstado.setVisibility(View.GONE);
-        editCodMateria.setVisibility(View.VISIBLE);
-        editCodMateria.setEnabled(true);
-        editGT.setVisibility(View.GONE);
-        editGT.setEnabled(false);
-        editGD.setVisibility(View.GONE);
-        editGD.setEnabled(false);
-        editGL.setVisibility(View.GONE);
-        editGL.setEnabled(false);
-        editFechaEval.setVisibility(View.GONE);
-        editFechaEval.setInputType(InputType.TYPE_NULL);
-        editFechaEval.setEnabled(false);
-        editHoraEval.setVisibility(View.GONE);
-        editHoraEval.setInputType(InputType.TYPE_NULL);
-        editHoraEval.setEnabled(false);
-        editOtroMotivo.setVisibility(View.GONE);
-        editOtroMotivo.setEnabled(false);
-        eliminarBtn.setEnabled(false);
-        modificarBtn.setEnabled(false);
         tipoEval.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,tipos));
-        tipoEval.setVisibility(View.VISIBLE);
-        tipoEval.setEnabled(true);
-        motivos.setVisibility(View.GONE);
-        motivos.setEnabled(false);
-        estadoSoli.setVisibility(View.GONE);
         sMonthIni = c.get(Calendar.MONTH);
         sDayIni = c.get(Calendar.DAY_OF_MONTH);
         sYearIni = c.get(Calendar.YEAR);
         sHour = c.get(Calendar.HOUR_OF_DAY);
         sMinute = c.get(Calendar.MINUTE);
+        listDetail = findViewById(R.id.layoutDetail);
 
 
         editFechaEval.setOnClickListener(new View.OnClickListener() {
@@ -124,6 +78,8 @@ public class Diferido_consultar extends AppCompatActivity {
             }
         });
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
     }
 
@@ -134,45 +90,20 @@ public class Diferido_consultar extends AppCompatActivity {
         if(solicitudDiferido == null)
             Toast.makeText(this, "Solicitud no encontrada", Toast.LENGTH_LONG).show();
         else{
+            listDetail.setVisibility(View.VISIBLE);
             editCarnet.setEnabled(false);
             editNumEval.setEnabled(false);
             editCodMateria.setEnabled(false);
             tipoEval.setEnabled(false);
-            lblGT.setVisibility(View.VISIBLE);
-            lblGD.setVisibility(View.VISIBLE);
-            lblGL.setVisibility(View.VISIBLE);
-            lblFecha.setVisibility(View.VISIBLE);
-            lblHora.setVisibility(View.VISIBLE);
-            lblMotivo.setVisibility(View.VISIBLE);
-            lblEstado.setVisibility(View.VISIBLE);
-            estadoSoli.setVisibility(View.VISIBLE);
-            editGT.setVisibility(View.VISIBLE);
-            editGD.setVisibility(View.VISIBLE);
-            editGL.setVisibility(View.VISIBLE);
-            editFechaEval.setVisibility(View.VISIBLE);
-            editHoraEval.setVisibility(View.VISIBLE);
-            motivos.setVisibility(View.VISIBLE);
             editOtroMotivo.setText(solicitudDiferido.getOtroMotivo());
-            lblOtro.setVisibility(View.VISIBLE);editOtroMotivo.setVisibility(View.VISIBLE);
             editCodMateria.setText(solicitudDiferido.getCodMateria());
             editGT.setText(solicitudDiferido.getGT());
-            editGT.setEnabled(true);
             editGD.setText(solicitudDiferido.getGD());
-            editGD.setEnabled(true);
             editGL.setText(solicitudDiferido.getGL());
-            editGL.setEnabled(true);
             editFechaEval.setText(solicitudDiferido.getFechaEva());
-            editFechaEval.setEnabled(true);
-            editHoraEval.setEnabled(true);
             editHoraEval.setText(solicitudDiferido.getHoraEva());
-            eliminarBtn.setVisibility(View.VISIBLE);
-            modificarBtn.setVisibility(View.VISIBLE);
-            modificarBtn.setEnabled(true);
-            eliminarBtn.setEnabled(true);
             tipoEval.setSelection(tipoEval(solicitudDiferido.getTipoEva()));
             motivos.setSelection(colocarMotivo(solicitudDiferido.getMotivo()));
-            motivos.setEnabled(true);
-            editOtroMotivo.setEnabled(true);
             if (solicitudDiferido.getOtroMotivo().isEmpty()){
                 editOtroMotivo.setVisibility(View.GONE);
                 lblOtro.setVisibility(View.GONE);
@@ -238,6 +169,7 @@ public class Diferido_consultar extends AppCompatActivity {
         editCarnet.setText("");
         editNumEval.setText("");
         editCodMateria.setText("");
+        listDetail.setVisibility(View.GONE);
         editGT.setText("");
         editGD.setText("");
         editGL.setText("");
@@ -248,38 +180,9 @@ public class Diferido_consultar extends AppCompatActivity {
         motivos.setSelection(0);
         editCarnet.setEnabled(true);
         editNumEval.setEnabled(true);
-        eliminarBtn.setVisibility(View.GONE);
-        modificarBtn.setVisibility(View.GONE);
         editCodMateria.setEnabled(true);
         tipoEval.setEnabled(true);
-        lblGT.setVisibility(View.GONE);
-        lblGD.setVisibility(View.GONE);
-        lblGL.setVisibility(View.GONE);
-        lblFecha.setVisibility(View.GONE);
-        lblHora.setVisibility(View.GONE);
-        lblMotivo.setVisibility(View.GONE);
-        lblOtro.setVisibility(View.GONE);
-        editGT.setVisibility(View.GONE);
-        editGT.setEnabled(false);
-        editGD.setVisibility(View.GONE);
-        editGD.setEnabled(false);
-        editGL.setVisibility(View.GONE);
-        editGL.setEnabled(false);
-        editFechaEval.setVisibility(View.GONE);
-        editFechaEval.setInputType(InputType.TYPE_NULL);
-        editFechaEval.setEnabled(false);
-        editHoraEval.setVisibility(View.GONE);
-        editHoraEval.setInputType(InputType.TYPE_NULL);
-        editHoraEval.setEnabled(false);
-        editOtroMotivo.setVisibility(View.GONE);
-        editOtroMotivo.setEnabled(false);
-        eliminarBtn.setEnabled(false);
-        modificarBtn.setEnabled(false);
-        motivos.setVisibility(View.GONE);
-        motivos.setEnabled(false);
         estadoSoli.setText("");
-        estadoSoli.setVisibility(View.GONE);
-        lblEstado.setVisibility(View.GONE);
         ciclo.setText("");
     }
 
@@ -318,6 +221,33 @@ public class Diferido_consultar extends AppCompatActivity {
         Toast.makeText(this, regAfectados, Toast.LENGTH_SHORT).show();
 
     }
+
+    public void consultarSolicitudWS(View v) {
+        String carnet = editCarnet.getText().toString();
+        String codmateria = editCodMateria.getText().toString();
+        String codciclo = ciclo.getText().toString();
+        String tipoevaluacion = tipoEval.getSelectedItem().toString();
+        String numEval = editNumEval.getText().toString();
+        String estado = "Pendiente";
+        String url = urlLocal + "?carnet=" + carnet+"&codmateria="+codmateria+"&ciclo="+codciclo+"&tipoeval="+tipoevaluacion+"&numeval="+numEval+"&estado="+estado;
+        String solicitudWS = ControladorServicio.obtenerRepuestaPeticion(url, this);
+        SolicitudDiferido solicitudDiferido = ControladorServicio.consultarSolicitudWS(solicitudWS,this);
+        if (solicitudDiferido!= null){
+            listDetail.setVisibility(View.VISIBLE);
+            editGT.setText(solicitudDiferido.getGT());
+            editGD.setText(solicitudDiferido.getGD());
+            editGL.setText(solicitudDiferido.getGL());
+            motivos.setSelection(colocarMotivo(solicitudDiferido.getMotivo()));
+            editFechaEval.setText(solicitudDiferido.getFechaEva());
+            editHoraEval.setText(solicitudDiferido.getHoraEva());
+            editOtroMotivo.setText(solicitudDiferido.getOtroMotivo());
+            estadoSoli.setText(solicitudDiferido.getEstado());
+        }else {
+            Toast.makeText(getApplicationContext(), "Error al recuperar datos",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
     public int tipoEval(String tipo){
         switch (tipo){
             case "EP":

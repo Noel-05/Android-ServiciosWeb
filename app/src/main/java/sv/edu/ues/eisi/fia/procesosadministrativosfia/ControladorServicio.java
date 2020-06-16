@@ -16,8 +16,12 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ControladorServicio {
 
@@ -104,4 +108,77 @@ public class ControladorServicio {
             e.printStackTrace();
         }
     }
+    public static String insertarMateriaWS(String peticion, Context ctx) {
+        String json = obtenerRepuestaPeticion(peticion, ctx);
+
+        try {
+            JSONObject resultado = new JSONObject(json);
+            Toast.makeText(ctx, "Materia registrada" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1)
+                return  "Materia ingresada correctamente.";
+            else
+                return  "Error al insertar Materia, registro duplicado.";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String actualizarEstudiante(String url, Context context) {
+        String json = obtenerRepuestaPeticion(url, context);
+        try {
+            JSONObject resultado = new JSONObject(json);
+            Toast.makeText(context, "Estudiante actualiado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1)
+                return  "Estudiante actualizado correctamente.";
+            else
+                return  "Error al actualizar estudiante";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String eliminarEstudiante(String url, Context context) {
+        String json = obtenerRepuestaPeticion(url, context);
+        try {
+            JSONObject resultado = new JSONObject(json);
+            Toast.makeText(context, "Estudiante eliminado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1)
+                return  "Estudiante eliminado correctamente.";
+            else
+                return  "Error al eliminar estudiante";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static SolicitudDiferido consultarSolicitudWS(String json, Context context) {
+        try {
+            JSONArray SoliJSON = new JSONArray(json);
+
+                JSONObject obj = SoliJSON.getJSONObject(0);
+                SolicitudDiferido soli = new SolicitudDiferido();
+                soli.setCarnet(obj.getString("CARNET"));
+                soli.setCiclo(obj.getString("CODCICLO"));
+                soli.setTipoEva(obj.getString("IDTIPOEVAL"));
+                soli.setCodMateria(obj.getString("IDASIGNATURA"));
+                soli.setNumeroEval(obj.getInt("NUMEROEVALUACION"));
+                soli.setFechaEva(obj.getString("FECHAEVALUACIONSD"));
+                soli.setHoraEva(obj.getString("HORAEVALUACIONSD"));
+                soli.setMotivo(obj.getString("IDMOTIVODIFERIDO"));
+                soli.setOtroMotivo(obj.getString("DESCRIPCIONMOTIVO"));
+                soli.setGT(obj.getString("GT"));
+                soli.setGD(obj.getString("GD"));
+                soli.setGL(obj.getString("GT"));
+                soli.setEstado(obj.getString("ESTADOSOLICITUD"));
+            return soli;
+        } catch (Exception e) {
+            Toast.makeText(context, "Error en parseO de JSON", Toast.LENGTH_LONG).show();
+            return null;
+        }    }
 }

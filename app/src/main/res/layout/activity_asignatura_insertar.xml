@@ -40,5 +40,8 @@
         <Button
             android:onClick="limpiarTexto"
             android:text="@string/limpiar"/>
+        <Button
+            android:onClick="insertarAsignaturaWS"
+            android:text="@string/insertarWS"/>
     </TableRow>
 </TableLayout>

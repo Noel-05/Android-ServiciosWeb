@@ -3,6 +3,7 @@ package sv.edu.ues.eisi.fia.procesosadministrativosfia;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +15,8 @@ public class Estudiante_consultar extends AppCompatActivity {
     ControladorBase helper;
     TextView lblNombre, lblApellido, lblCarrera;
     Button eliminarBtn, actualizarBtn;
+    private final String urlLocalActualizarEstudiante = "http://192.168.1.8/ws_estudiante_update.php";
+    private final String urlLocalEliminarEstudiante = "http://192.168.1.8/ws_estudiante_delete.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +39,8 @@ public class Estudiante_consultar extends AppCompatActivity {
         eliminarBtn.setVisibility(View.GONE);
         actualizarBtn = findViewById(R.id.ModificarBtn);
         actualizarBtn.setVisibility(View.GONE);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
     public void limpiarTexto(View view) {
         lblNombre.setVisibility(View.GONE);
@@ -98,5 +103,31 @@ public class Estudiante_consultar extends AppCompatActivity {
         String regAfectado = helper.actualizar(estudiante);
         helper.cerrar();
         Toast.makeText(this,regAfectado,Toast.LENGTH_SHORT).show();
+    }
+    public void actualizarEstudianteWS(View view){
+        String carnet = editCarnet.getText().toString();
+        String nombres = editNombre.getText().toString().replace(" ","%20");
+        String apellidos = editApellido.getText().toString().replace(" ","%20");
+        String carrera = editCarrera.getText().toString().replace(" ","%20");
+        try {
+
+            String url = urlLocalActualizarEstudiante+"?carnet="+carnet+"&nombres="+nombres+"&apellidos="+apellidos+"&carrera="+carrera;
+            String estudianteActualizado = ControladorServicio.actualizarEstudiante(url, this);
+            Toast.makeText(getApplicationContext(), estudianteActualizado, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void eliminarEstudianteWS(View view) {
+        String carnet = editCarnet.getText().toString();
+        try {
+
+            String url = urlLocalEliminarEstudiante+"?carnet="+carnet;
+            String estudianteActualizado = ControladorServicio.eliminarEstudiante(url, this);
+            Toast.makeText(getApplicationContext(), estudianteActualizado, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

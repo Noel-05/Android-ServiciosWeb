@@ -91,6 +91,14 @@
             android:id="@+id/ModificarBtn"
             android:onClick="actualizarEstudiante"
             android:text="@string/modificarBtn" />
-    </TableRow>
 
+    </TableRow>
+    <TableRow>
+        <Button android:text="@string/eliminarWS"
+            android:onClick="eliminarEstudianteWS"
+            android:id="@+id/EliminarBtnWS"/>
+        <Button android:id="@+id/modificarWS"
+            android:onClick="actualizarEstudianteWS"
+            android:text="@string/modificarbtnWS"/>
+    </TableRow>
 </TableLayout>

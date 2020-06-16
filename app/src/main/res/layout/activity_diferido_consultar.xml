@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="5dip"
     tools:context="sv.edu.ues.eisi.fia.procesosadministrativosfia.Diferido_consultar">
     <TableLayout
         android:layout_width="match_parent"
@@ -62,6 +63,7 @@
             android:inputType="number"
             android:maxLength="5"/>
     </TableRow>
+
     <TableRow>
         <Button android:id="@+id/cancelarBtn"
             android:onClick="limpiarTexto"
@@ -70,8 +72,25 @@
             android:onClick="consultarSolicitudDiferido"
             android:text="@string/buscarBtn"/>
     </TableRow>
-
-
+        <TableRow>
+            <TextView android:text="@string/consultarWS"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
+        <Button android:id="@+id/botonConsultarWS"
+            android:text="@string/consultarWS"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:onClick="consultarSolicitudWS"/>
+    </TableRow>
+        <FrameLayout
+            android:id="@+id/layoutDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dip"
+            android:visibility="gone">
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
     <TableRow>
         <TextView
             android:id="@+id/lblGT"
@@ -139,7 +158,7 @@
             android:layout_height="wrap_content"
             android:text="@string/motivos"/>
         <Spinner android:id="@+id/spinMotivos"
-            android:layout_width="fill_parent"
+            android:layout_width="200dip"
             android:layout_height="wrap_content"
             android:entries="@array/motivos"/>
 
@@ -174,6 +193,9 @@
         <Button android:id="@+id/ModificarBtn"
             android:onClick="ModificarSolicitudDiferido"
             android:text="@string/modificarBtn"/>
+
     </TableRow>
+            </TableLayout>
+        </FrameLayout>
     </TableLayout>
 </ScrollView>
