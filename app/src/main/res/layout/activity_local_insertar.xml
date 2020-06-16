@@ -43,6 +43,11 @@
             android:layout_height="wrap_content"
             android:onClick="limpiarTexto"
             android:text="@string/limpiar" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="insertarLocalWS"
+            android:text="@string/insertarWS" />
     </TableRow>
 
 </TableLayout>

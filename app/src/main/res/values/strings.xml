@@ -171,6 +171,7 @@
     <string name="error_campo_obligatorio">Campo Obligatorio</string>
     <string name="error_valor_entre">Error valor entre 1 y 9999</string>
 
-
     <string name="validar">Validar</string>
+
+    <string name="insertarWS">Insertar WS</string>
 </resources>
