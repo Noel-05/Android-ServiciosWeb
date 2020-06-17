@@ -52,4 +52,11 @@
             android:text="@string/limpiar"
             android:onClick="limpiar"/>
     </TableRow>
+
+    <TableRow>
+        <Button
+            android:layout_width="wrap_content"
+            android:text="@string/eliminarWS"
+            android:onClick="eliminarDocenteWS"/>
+    </TableRow>
 </TableLayout>

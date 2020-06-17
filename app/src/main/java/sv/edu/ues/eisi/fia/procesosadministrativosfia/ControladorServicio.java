@@ -20,9 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ControladorServicio {
 
     public static  String obtenerRepuestaPeticion(String url, Context ctx){
@@ -94,19 +91,72 @@ public class ControladorServicio {
         return respuesta;
     }
 
-    public static void insertarNotaLocalWS(String peticion, Context ctx) {
+    public static String insertarLocalWS(String peticion, Context ctx) {
         String json = obtenerRepuestaPeticion(peticion, ctx);
         try {
             JSONObject resultado = new JSONObject(json);
             Toast.makeText(ctx, "Local ingresado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
             int respuesta = resultado.getInt("resultado");
             if (respuesta == 1)
-                    Toast.makeText(ctx, "Local ingresado correctamente.", Toast.LENGTH_LONG).show();
+                return "Local ingresado correctamente.";
             else
-                Toast.makeText(ctx, "Error al insertar Local, registro duplicado.", Toast.LENGTH_LONG).show();
+                return "Error al insertar Local, registro duplicado.";
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    public static String actualizarPeriodoInscripcionRevision(String peticion, Context ctx){
+        String json = obtenerRepuestaPeticion(peticion, ctx);
+        try {
+            JSONObject resultado = new JSONObject(json);
+            Toast.makeText(ctx, "Periodo Actualizado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1)
+                return "Periodo actualizado correctamente.";
+            else
+                return "Error al actualizar Periodo, registro duplicado.";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Evaluacion consultarEvaluacionWS(String json, Context context){
+        try {
+            JSONArray evaluacionJSON = new JSONArray(json);
+            JSONObject obj = evaluacionJSON.getJSONObject(0);
+
+            Evaluacion eval = new Evaluacion();
+            eval.setCodCiclo(obj.getString("CODCICLO"));
+            eval.setCodTipoEval(obj.getString("IDTIPOEVAL"));
+            eval.setCodAsignatura(obj.getString("IDASIGNATURA"));
+            eval.setNumeroEvaluacion(obj.getInt("NUMEROEVALUACION"));
+            eval.setFechaEvaluacion(obj.getString("FECHAEVALUACION"));
+
+            Toast.makeText(context, "Datos obtenidos correctamente.", Toast.LENGTH_SHORT).show();
+            return eval;
+        }catch (Exception e){
+            Toast.makeText(context, "Error en parseO de JSON", Toast.LENGTH_SHORT).show();
+            return null;
+        }
+    }
+
+    public static String eliminarDocenteWS(String url, Context context){
+        String json = obtenerRepuestaPeticion(url, context);
+        try {
+            JSONObject resultado = new JSONObject(json);
+            Toast.makeText(context, "Docente eliminado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1)
+                return  "Docente eliminado correctamente.";
+            else
+                return  "Error al eliminar Docente.";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
     public static String insertarMateriaWS(String peticion, Context ctx) {
         String json = obtenerRepuestaPeticion(peticion, ctx);

@@ -1,7 +1,5 @@
 package sv.edu.ues.eisi.fia.procesosadministrativosfia;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -61,8 +59,13 @@ public class Local_insertar extends Activity {
         JSONObject datosLocal = new JSONObject();
         JSONObject local = new JSONObject();
 
-        url = urlLocal + "?codlocal=" +codlocal+ "&nomlocal=" +nombrelocal+ "&ubicacion=" +ubicacionlocal;
-        ControladorServicio.insertarNotaLocalWS(url, this);
+        try {
+            url = urlLocal + "?codlocal=" +codlocal+ "&nomlocal=" +nombrelocal+ "&ubicacion=" +ubicacionlocal;
+            String resultado = ControladorServicio.insertarLocalWS(url, this);
+            Toast.makeText(this, resultado, Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     public void limpiarTexto(View v){

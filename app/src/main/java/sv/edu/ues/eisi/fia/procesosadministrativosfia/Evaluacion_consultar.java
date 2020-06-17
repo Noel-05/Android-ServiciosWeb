@@ -1,18 +1,23 @@
 package sv.edu.ues.eisi.fia.procesosadministrativosfia;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 public class Evaluacion_consultar extends Activity {
+    @SuppressLint("SetTextI18n")
+
     EditText editCodasignatura, editCodciclo, editNumeval, editFechaeval, editNomasignatura;
     Spinner spinTipoeval;
     ControladorBase helper;
+    FrameLayout listDetail;
+    private final String urLocal = "http://169.254.99.89/ws_consultar_evaluacion.php";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,12 +25,17 @@ public class Evaluacion_consultar extends Activity {
         setContentView(R.layout.activity_evaluacion_consultar);
         helper = new ControladorBase(this);
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         editCodasignatura = (EditText) findViewById(R.id.editCodasignatura);
         editCodciclo = (EditText) findViewById(R.id.editCodciclo);
         editNumeval = (EditText) findViewById(R.id.editNumeval);
         editFechaeval = (EditText) findViewById(R.id.editFechaeval);
         editNomasignatura = (EditText) findViewById(R.id.editNomasignatura);
         spinTipoeval = (Spinner) findViewById(R.id.spinTipoEval);
+
+        listDetail = findViewById(R.id.layoutDetail);
     }
 
     public void consultarEvaluacion(View v){
@@ -60,6 +70,39 @@ public class Evaluacion_consultar extends Activity {
         }else{
             editFechaeval.setText(evaluacion.getFechaEvaluacion());
             editNomasignatura.setText(asignatura.getNomasignatura());
+        }
+    }
+
+    public void consultarEvaluacionWS(View v){
+        String tipoEval = "%20";
+        String ciclo = editCodciclo.getText().toString();
+        String numeroevaluacion = editNumeval.getText().toString();
+        String asignatura = editCodasignatura.getText().toString();
+        int eval = 0;
+
+        if(!editNumeval.getText().toString().isEmpty()){
+            eval = Integer.parseInt(editNumeval.getText().toString());
+        }
+
+        //Validacion de los Spinner para guardar los codigos.
+        if(spinTipoeval.getSelectedItem().toString().equals("Examen Parcial")){
+            tipoEval = "EP";
+        }else if(spinTipoeval.getSelectedItem().toString().equals("Examen Discusion")){
+            tipoEval = "ED";
+        }else if(spinTipoeval.getSelectedItem().toString().equals("Examen Laboratorio")){
+            tipoEval = "EL";
+        }
+
+        String url = urLocal + "?codciclo=" +ciclo+ "&idtipoeval=" +tipoEval+ "&codasignatura=" +asignatura+ "&numeroevaluacion=" +numeroevaluacion;
+        String solicitudWS = ControladorServicio.obtenerRepuestaPeticion(url, this);
+        Evaluacion evaluacion = ControladorServicio.consultarEvaluacionWS(solicitudWS, this);
+
+        if(evaluacion != null){
+            listDetail.setVisibility(View.VISIBLE);
+            editFechaeval.setText(evaluacion.getFechaEvaluacion());
+            editNomasignatura.setText(evaluacion.getCodAsignatura());
+        }else{
+            Toast.makeText(getApplicationContext(), "Error al recuperar la Evaluación.", Toast.LENGTH_SHORT).show();
         }
     }
 
