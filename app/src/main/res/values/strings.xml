@@ -175,6 +175,7 @@
 
     <string name="insertarWS">Insertar WS</string>
     <string name="modificarbtnWS">Modificar WS</string>
-    <string name="eliminarWS">Eliminar WS</string>
+    <string name="actualizarWS">Actualizar WS</string>
     <string name="consultarWS">Consultar WS</string>
+    <string name="eliminarWS">Eliminar WS</string>
 </resources>
