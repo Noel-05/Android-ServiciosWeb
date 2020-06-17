@@ -94,71 +94,92 @@ public class ControladorServicio {
         return respuesta;
     }
 
-    public static String insertarLocalWS(String peticion, Context ctx) {
+    public static void insertarNotaLocalWS(String peticion, Context ctx) {
         String json = obtenerRepuestaPeticion(peticion, ctx);
         try {
             JSONObject resultado = new JSONObject(json);
             Toast.makeText(ctx, "Local ingresado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
             int respuesta = resultado.getInt("resultado");
             if (respuesta == 1)
-                return "Local ingresado correctamente.";
+                    Toast.makeText(ctx, "Local ingresado correctamente.", Toast.LENGTH_LONG).show();
             else
-                return "Error al insertar Local, registro duplicado.";
+                Toast.makeText(ctx, "Error al insertar Local, registro duplicado.", Toast.LENGTH_LONG).show();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return null;
     }
-
-    public static String actualizarPeriodoInscripcionRevision(String peticion, Context ctx){
+    public static String insertarMateriaWS(String peticion, Context ctx) {
         String json = obtenerRepuestaPeticion(peticion, ctx);
+
         try {
             JSONObject resultado = new JSONObject(json);
-            Toast.makeText(ctx, "Periodo Actualizado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, "Materia registrada" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
             int respuesta = resultado.getInt("resultado");
             if (respuesta == 1)
-                return "Periodo actualizado correctamente.";
+                return  "Materia ingresada correctamente.";
             else
-                return "Error al actualizar Periodo, registro duplicado.";
+                return  "Error al insertar Materia, registro duplicado.";
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static Evaluacion consultarEvaluacionWS(String json, Context context){
-        try {
-            JSONArray evaluacionJSON = new JSONArray(json);
-            JSONObject obj = evaluacionJSON.getJSONObject(0);
-
-            Evaluacion eval = new Evaluacion();
-            eval.setCodCiclo(obj.getString("CODCICLO"));
-            eval.setCodTipoEval(obj.getString("IDTIPOEVAL"));
-            eval.setCodAsignatura(obj.getString("IDASIGNATURA"));
-            eval.setNumeroEvaluacion(obj.getInt("NUMEROEVALUACION"));
-            eval.setFechaEvaluacion(obj.getString("FECHAEVALUACION"));
-
-            Toast.makeText(context, "Datos obtenidos correctamente.", Toast.LENGTH_SHORT).show();
-            return eval;
-        }catch (Exception e){
-            Toast.makeText(context, "Error en parseO de JSON", Toast.LENGTH_SHORT).show();
-            return null;
-        }
-    }
-
-    public static String eliminarDocenteWS(String url, Context context){
+    public static String actualizarEstudiante(String url, Context context) {
         String json = obtenerRepuestaPeticion(url, context);
         try {
             JSONObject resultado = new JSONObject(json);
-            Toast.makeText(context, "Docente eliminado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Estudiante actualiado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
             int respuesta = resultado.getInt("resultado");
             if (respuesta == 1)
-                return  "Docente eliminado correctamente.";
+                return  "Estudiante actualizado correctamente.";
             else
-                return  "Error al eliminar Docente.";
+                return  "Error al actualizar estudiante";
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    public static String eliminarEstudiante(String url, Context context) {
+        String json = obtenerRepuestaPeticion(url, context);
+        try {
+            JSONObject resultado = new JSONObject(json);
+            Toast.makeText(context, "Estudiante eliminado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
+            int respuesta = resultado.getInt("resultado");
+            if (respuesta == 1)
+                return  "Estudiante eliminado correctamente.";
+            else
+                return  "Error al eliminar estudiante";
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static SolicitudDiferido consultarSolicitudWS(String json, Context context) {
+        try {
+            JSONArray SoliJSON = new JSONArray(json);
+
+                JSONObject obj = SoliJSON.getJSONObject(0);
+                SolicitudDiferido soli = new SolicitudDiferido();
+                soli.setCarnet(obj.getString("CARNET"));
+                soli.setCiclo(obj.getString("CODCICLO"));
+                soli.setTipoEva(obj.getString("IDTIPOEVAL"));
+                soli.setCodMateria(obj.getString("IDASIGNATURA"));
+                soli.setNumeroEval(obj.getInt("NUMEROEVALUACION"));
+                soli.setFechaEva(obj.getString("FECHAEVALUACIONSD"));
+                soli.setHoraEva(obj.getString("HORAEVALUACIONSD"));
+                soli.setMotivo(obj.getString("IDMOTIVODIFERIDO"));
+                soli.setOtroMotivo(obj.getString("DESCRIPCIONMOTIVO"));
+                soli.setGT(obj.getString("GT"));
+                soli.setGD(obj.getString("GD"));
+                soli.setGL(obj.getString("GT"));
+                soli.setEstado(obj.getString("ESTADOSOLICITUD"));
+                Toast.makeText(context, "Datos obtenidos correctamente",Toast.LENGTH_SHORT).show();
+            return soli;
+        } catch (Exception e) {
+            Toast.makeText(context, "Error en parseO de JSON", Toast.LENGTH_LONG).show();
+            return null;
+        }    }
 }
