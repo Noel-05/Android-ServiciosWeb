@@ -98,7 +98,7 @@ public class ControladorServicio {
         String json = obtenerRepuestaPeticion(peticion, ctx);
         try {
             JSONObject resultado = new JSONObject(json);
-            Toast.makeText(ctx, "Local ingresado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, "Local ingresado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
             int respuesta = resultado.getInt("resultado");
             if (respuesta == 1)
                     Toast.makeText(ctx, "Local ingresado correctamente.", Toast.LENGTH_LONG).show();
@@ -113,7 +113,7 @@ public class ControladorServicio {
 
         try {
             JSONObject resultado = new JSONObject(json);
-            Toast.makeText(ctx, "Materia registrada" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, "Materia registrada" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
             int respuesta = resultado.getInt("resultado");
             if (respuesta == 1)
                 return  "Materia ingresada correctamente.";
@@ -129,7 +129,7 @@ public class ControladorServicio {
         String json = obtenerRepuestaPeticion(url, context);
         try {
             JSONObject resultado = new JSONObject(json);
-            Toast.makeText(context, "Estudiante actualiado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Estudiante actualiado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
             int respuesta = resultado.getInt("resultado");
             if (respuesta == 1)
                 return  "Estudiante actualizado correctamente.";
@@ -145,7 +145,7 @@ public class ControladorServicio {
         String json = obtenerRepuestaPeticion(url, context);
         try {
             JSONObject resultado = new JSONObject(json);
-            Toast.makeText(context, "Estudiante eliminado" + resultado.getJSONArray("resultado").toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "Estudiante eliminado" + resultado.getString("resultado"), Toast.LENGTH_LONG).show();
             int respuesta = resultado.getInt("resultado");
             if (respuesta == 1)
                 return  "Estudiante eliminado correctamente.";
@@ -176,6 +176,7 @@ public class ControladorServicio {
                 soli.setGD(obj.getString("GD"));
                 soli.setGL(obj.getString("GT"));
                 soli.setEstado(obj.getString("ESTADOSOLICITUD"));
+                Toast.makeText(context, "Datos obtenidos correctamente",Toast.LENGTH_SHORT).show();
             return soli;
         } catch (Exception e) {
             Toast.makeText(context, "Error en parseO de JSON", Toast.LENGTH_LONG).show();
