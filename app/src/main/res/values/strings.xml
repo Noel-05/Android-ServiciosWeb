@@ -174,4 +174,8 @@
     <string name="validar">Validar</string>
 
     <string name="insertarWS">Insertar WS</string>
+    <string name="actualizarWS">Actualizar WS</string>
+    <string name="consultarWS">Consultar WS</string>
+    <string name="eliminarWS">Eliminar WS</string>
+
 </resources>

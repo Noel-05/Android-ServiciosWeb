@@ -2,36 +2,54 @@ package sv.edu.ues.eisi.fia.procesosadministrativosfia;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.util.Calendar;
+import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.List;
+
+@SuppressLint("NewApi")
 public class PeriodoInscripcionRevision_actualizar extends Activity {
     EditText editCoddocente, editCodlocal, editCodasignatura, editCodciclo, editNumeval, editFechadesde, editFechahasta, editFecharev, editHorarev;
     Spinner spinTiporev, spinTipoeval;
     ControladorBase helper;
+
     private int pdYearIni, pdMonthIni, pdDayIni, sdYearIni, sdMonthIni, sdDayIni, sdHour, pdHour, sdMinute, pdMinute;
     private int phYearIni, phMonthIni, phDayIni, shYearIni, shMonthIni, shDayIni;
     private int prYearIni, prMonthIni, prDayIni, srYearIni, srMonthIni, srDayIni;
     static final int DATE_ID_D = 0, DATE_ID_H = 1, DATE_ID_R = 2, HOUR_ID=3;
     Calendar c = Calendar.getInstance();
 
+    private final String urlLocal = "http://169.254.99.89/ws_actualizar_periodoinscripcionrevision.php";
+
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_periodo_inscripcion_revision_actualizar);
-
         helper = new ControladorBase(this);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
         editCoddocente = (EditText) findViewById(R.id.editCoddocente);
         editCodasignatura = (EditText) findViewById(R.id.editCodasignatura);
         editCodlocal = (EditText) findViewById(R.id.editCodlocal);
@@ -228,17 +246,49 @@ public class PeriodoInscripcionRevision_actualizar extends Activity {
         Toast.makeText(this, regInsertados, Toast.LENGTH_SHORT).show();
     }
 
-    public void limpiarTexto(View v){
-        editCodasignatura.setText("");
-        editCodciclo.setText("");
-        editCoddocente.setText("");
-        editCodlocal.setText("");
-        editNumeval.setText("");
-        spinTipoeval.setSelection(0);
-        spinTiporev.setSelection(0);
-        editFechadesde.setText("");
-        editFechahasta.setText("");
-        editFecharev.setText("");
-        editHorarev.setText("");
+    public void actualizarWS(View v){
+        String asignatura = editCodasignatura.getText().toString();
+        String ciclo = editCodciclo.getText().toString();
+        String docente = editCoddocente.getText().toString();
+        String local = editCodlocal.getText().toString();
+        String fechaDesde = editFechadesde.getText().toString();
+        String fechaHasta = editFechahasta.getText().toString();
+        String fechaRev = editFecharev.getText().toString();
+        String horaRev = editHorarev.getText().toString();
+        int numeroEval = 0;
+        String tipoEval = "%20";
+        String tipoRev = "%20";
+
+        String url = null;
+        String urlConsulta = null;
+        JSONObject datosPeriodo = new JSONObject();
+        JSONObject periodo = new JSONObject();
+
+        if(!editNumeval.getText().toString().isEmpty()){
+            numeroEval = Integer.parseInt(editNumeval.getText().toString());
+        }
+
+        //Validacion de los Spinner para guardar los codigos.
+        if(spinTipoeval.getSelectedItem().toString().equals("Examen Parcial")){
+            tipoEval = "EP";
+        }else if(spinTipoeval.getSelectedItem().toString().equals("Examen Discusion")){
+            tipoEval = "ED";
+        }else if(spinTipoeval.getSelectedItem().toString().equals("Examen Laboratorio")){
+            tipoEval = "EL";
+        }
+
+        if(spinTiporev.getSelectedItem().toString().equals("Primer Revisión")){
+            tipoRev = "PR";
+        }else if(spinTiporev.getSelectedItem().toString().equals("Segunda Revisión")){
+            tipoRev = "SR";
+        }
+
+        try{
+            url = urlLocal + "?coddocente=" +docente+ "&codlocal=" +local+ "&idtiporev=" +tipoRev+ "&codciclo=" +ciclo+ "&idtipoeval=" +tipoEval+ "&codasignatura="  +asignatura+ "&numeval=" +numeroEval+ "&fechahasta=" +fechaHasta+ "&fecharevision=" +fechaRev+ "&horarevision=" +horaRev +"&fechadesde=" +fechaDesde;
+            String perInsc = ControladorServicio.actualizarPeriodoInscripcionRevision(url, this);
+            Toast.makeText(getApplicationContext(), perInsc, Toast.LENGTH_SHORT).show();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }
